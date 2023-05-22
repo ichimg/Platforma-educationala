@@ -22,6 +22,21 @@ namespace EducationalPlatform.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ClassroomTeacher", b =>
+                {
+                    b.Property<int>("ClassroomsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeachersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClassroomsId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("ClassroomTeacher");
+                });
+
             modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Absence", b =>
                 {
                     b.Property<int>("Id")
@@ -94,10 +109,7 @@ namespace EducationalPlatform.DataAccess.Migrations
                     b.Property<int>("SpecializationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeacherId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<int>("Year")
@@ -107,9 +119,9 @@ namespace EducationalPlatform.DataAccess.Migrations
 
                     b.HasIndex("SpecializationId");
 
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("TeacherId")
+                        .IsUnique()
+                        .HasFilter("[TeacherId] IS NOT NULL");
 
                     b.ToTable("Classrooms");
                 });
@@ -215,16 +227,11 @@ namespace EducationalPlatform.DataAccess.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpecializationId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClassroomId");
 
                     b.HasIndex("PersonId");
-
-                    b.HasIndex("SpecializationId");
 
                     b.ToTable("Students");
                 });
@@ -260,59 +267,11 @@ namespace EducationalPlatform.DataAccess.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpecializationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("SpecializationId");
-
-                    b.HasIndex("StudentId");
-
                     b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.TeacherClassroom", b =>
-                {
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassroomId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TeacherId", "ClassroomId");
-
-                    b.HasIndex("ClassroomId")
-                        .IsUnique();
-
-                    b.HasIndex("TeacherId")
-                        .IsUnique();
-
-                    b.ToTable("TeacherClassroom");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.TeacherSubject", b =>
-                {
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TeacherId", "SubjectId");
-
-                    b.HasIndex("SubjectId")
-                        .IsUnique();
-
-                    b.HasIndex("TeacherId")
-                        .IsUnique();
-
-                    b.ToTable("TeacherSubject");
                 });
 
             modelBuilder.Entity("SpecializationSubject", b =>
@@ -328,6 +287,36 @@ namespace EducationalPlatform.DataAccess.Migrations
                     b.HasIndex("SubjectsId");
 
                     b.ToTable("SpecializationSubject");
+                });
+
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.Property<int>("SubjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeachersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubjectsId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("SubjectTeacher");
+                });
+
+            modelBuilder.Entity("ClassroomTeacher", b =>
+                {
+                    b.HasOne("EducationalPlatform.DataAccess.Models.Classroom", null)
+                        .WithMany()
+                        .HasForeignKey("ClassroomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EducationalPlatform.DataAccess.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Absence", b =>
@@ -376,15 +365,9 @@ namespace EducationalPlatform.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Subject", null)
-                        .WithMany("Classrooms")
-                        .HasForeignKey("SubjectId");
-
                     b.HasOne("EducationalPlatform.DataAccess.Models.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne()
+                        .HasForeignKey("EducationalPlatform.DataAccess.Models.Classroom", "TeacherId");
 
                     b.Navigation("Specialization");
 
@@ -422,15 +405,9 @@ namespace EducationalPlatform.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Specialization", "Specialization")
-                        .WithMany()
-                        .HasForeignKey("SpecializationId");
-
                     b.Navigation("Classroom");
 
                     b.Navigation("Person");
-
-                    b.Navigation("Specialization");
                 });
 
             modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Teacher", b =>
@@ -441,53 +418,7 @@ namespace EducationalPlatform.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Specialization", null)
-                        .WithMany("Teachers")
-                        .HasForeignKey("SpecializationId");
-
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Student", null)
-                        .WithMany("Teachers")
-                        .HasForeignKey("StudentId");
-
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.TeacherClassroom", b =>
-                {
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Classroom", "Classroom")
-                        .WithOne()
-                        .HasForeignKey("EducationalPlatform.DataAccess.Models.TeacherClassroom", "ClassroomId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Teacher", "Teacher")
-                        .WithOne()
-                        .HasForeignKey("EducationalPlatform.DataAccess.Models.TeacherClassroom", "TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Classroom");
-
-                    b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.TeacherSubject", b =>
-                {
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Subject", "Subject")
-                        .WithOne()
-                        .HasForeignKey("EducationalPlatform.DataAccess.Models.TeacherSubject", "SubjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("EducationalPlatform.DataAccess.Models.Teacher", "Teacher")
-                        .WithOne()
-                        .HasForeignKey("EducationalPlatform.DataAccess.Models.TeacherSubject", "TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Subject");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("SpecializationSubject", b =>
@@ -505,24 +436,24 @@ namespace EducationalPlatform.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SubjectTeacher", b =>
+                {
+                    b.HasOne("EducationalPlatform.DataAccess.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EducationalPlatform.DataAccess.Models.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Classroom", b =>
                 {
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Specialization", b =>
-                {
-                    b.Navigation("Teachers");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Student", b =>
-                {
-                    b.Navigation("Teachers");
-                });
-
-            modelBuilder.Entity("EducationalPlatform.DataAccess.Models.Subject", b =>
-                {
-                    b.Navigation("Classrooms");
                 });
 #pragma warning restore 612, 618
         }

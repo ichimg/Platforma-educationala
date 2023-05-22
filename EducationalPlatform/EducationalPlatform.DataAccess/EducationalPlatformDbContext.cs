@@ -27,15 +27,13 @@ namespace EducationalPlatform.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TeacherClassroom>().HasKey(vf => new { vf.TeacherId, vf.ClassroomId });
-            modelBuilder.Entity<TeacherSubject>().HasKey(vf => new { vf.TeacherId, vf.SubjectId });
-
             modelBuilder.Entity<Absence>().HasOne(c => c.Teacher).WithOne().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Absence>().HasOne(c => c.Student).WithOne().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TeacherClassroom>().HasOne(c => c.Teacher).WithOne().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TeacherClassroom>().HasOne(c => c.Classroom).WithOne().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TeacherSubject>().HasOne(c => c.Teacher).WithOne().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TeacherSubject>().HasOne(c => c.Subject).WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Classroom>()
+            .HasOne(c => c.Teacher)
+            .WithOne()
+            .HasForeignKey<Classroom>(c => c.TeacherId);
 
         }
     }

@@ -1,6 +1,7 @@
 ﻿using EducationalPlatform.Commands;
 using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Events;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
 using System;
@@ -12,8 +13,13 @@ namespace EducationalPlatform.ViewModels
 {
     public class AddOrEditTeacherViewModel : ViewModelBase
     {
+        public delegate void NewTeacherEventHandler(object sender, NewTeacherEventArgs e);
+        public event NewTeacherEventHandler NewTeacherCreated;
+
+
         private readonly IRepository<Person> personRepository;
         private readonly IRepository<Teacher> teacherRepository;
+        private readonly IRepository<Classroom> classroomRepository;
         private readonly WindowService windowService;
 
         private readonly AdministratorViewModel administratorViewModel;
@@ -24,11 +30,13 @@ namespace EducationalPlatform.ViewModels
             WindowService windowService,
             IRepository<Person> personRepository,
             IRepository<Teacher> teacherRepository,
+            IRepository<Classroom> classroomRepository,
             bool isEditing)
         {
             this.administratorViewModel = administratorViewModel ?? throw new ArgumentNullException(nameof(administratorViewModel));
             this.personRepository = personRepository ?? throw new ArgumentNullException(nameof(personRepository));
             this.teacherRepository = teacherRepository ?? throw new ArgumentNullException(nameof(teacherRepository));
+            this.classroomRepository = classroomRepository ?? throw new ArgumentNullException(nameof(classroomRepository));
             this.isEditing = isEditing;
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
             windowService.EditTeacherFormViewLaunched += Handle_EdiTeacherFormViewLaunched;
@@ -149,8 +157,12 @@ namespace EducationalPlatform.ViewModels
                 IsMaster = this.IsMaster
             };
 
+
             personRepository.Add(personToAdd);
             teacherRepository.Add(teacherToAdd);
+
+            NewTeacherEventArgs eventArgs = new NewTeacherEventArgs(teacherToAdd);
+            NewTeacherCreated?.Invoke(this, eventArgs);
 
             administratorViewModel.Teachers.Clear();
             var list = teacherRepository.GetAll();
@@ -165,12 +177,26 @@ namespace EducationalPlatform.ViewModels
             administratorViewModel.SelectedTeacher.Person.Password = this.Password;
             administratorViewModel.SelectedTeacher.IsMaster = this.IsMaster;
 
+            Classroom previousClassroom = classroomRepository.GetAll().Where(c => c.TeacherId == administratorViewModel.SelectedTeacher.Id).FirstOrDefault();
+
+            if(previousClassroom != null)
+            {
+                previousClassroom.TeacherId = null;
+                previousClassroom.Teacher = null;
+                classroomRepository.Update(previousClassroom);
+            }
+
+            Classroom classroomToMaster = classroomRepository.GetAll().Where(c => c.FullName == MasterChosenClass).FirstOrDefault();
+
+            classroomToMaster.TeacherId = administratorViewModel.SelectedTeacher.Id;
+
             var teacher = administratorViewModel.SelectedTeacher;
             administratorViewModel.Teachers.Remove(teacher);
             administratorViewModel.Teachers.Add(teacher);
             administratorViewModel.SelectedTeacher = teacher;
 
             teacherRepository.Update(administratorViewModel.SelectedTeacher);
+            classroomRepository.Update(classroomToMaster);
         }
 
     }

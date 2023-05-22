@@ -30,7 +30,6 @@ namespace EducationalPlatform.ViewModels
             IRepository<Classroom> classroomRepository,
             IRepository<Specialization> specializationRepository,
             IRepository<Subject> subjectRepository
-
             )
         {
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));

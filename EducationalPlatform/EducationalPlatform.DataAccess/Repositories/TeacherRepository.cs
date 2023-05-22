@@ -36,12 +36,12 @@ namespace EducationalPlatform.DataAccess.Repositories
 
         public IEnumerable<Teacher> GetAll()
         {
-            return dbContext.Teachers.Include(t => t.Person);
+            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).Include(t => t.Classrooms);
         }
 
         public Teacher GetById(int id)
         {
-            return dbContext.Teachers.Include(t => t.Person).FirstOrDefault(t => t.Id == id);
+            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).Include(t => t.Classrooms).FirstOrDefault(t => t.Id == id);
         }
 
         public void Update(Teacher entity)

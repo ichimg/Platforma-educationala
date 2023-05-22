@@ -20,7 +20,6 @@ namespace EducationalPlatform
             IRepository<Classroom> classroomRepository = new ClassroomRepository(dbContext);
             IRepository<Specialization> specializationRepository = new SpecializationRepository(dbContext);
             IRepository<Subject> subjectRepository = new SubjectRepository(dbContext);
-
             return new AuthenticationViewModel(messageBoxService,
                 windowService,
                 personRepository,

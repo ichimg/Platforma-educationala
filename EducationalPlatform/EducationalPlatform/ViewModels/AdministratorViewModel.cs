@@ -1,13 +1,13 @@
 ﻿using EducationalPlatform.Commands;
+using EducationalPlatform.DataAccess.Exceptions;
 using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Events;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Windows.Input;
 
 namespace EducationalPlatform.ViewModels
@@ -26,7 +26,6 @@ namespace EducationalPlatform.ViewModels
         private readonly IRepository<Classroom> classroomRepository;
         private readonly IRepository<Specialization> specializationRepository;
         private readonly IRepository<Subject> subjectRepository;
-
 
         private readonly WindowService windowService;
 
@@ -267,6 +266,26 @@ namespace EducationalPlatform.ViewModels
             }
         }
 
+        private ICommand seeDetailsCommand;
+        public ICommand SeeDetailsCommand
+        {
+            get
+            {
+                if (seeDetailsCommand is null)
+                {
+                    seeDetailsCommand = new RelayCommand(() => OpenDetailsWindow(), param => SelectedTeacher != null);
+                }
+                return seeDetailsCommand;
+            }
+        }
+
+        private void OpenDetailsWindow()
+        {
+            if (DisplayedList == EDisplayedList.Teachers)
+            {
+                windowService.ShowTeacherDetailsView(this, windowService, teacherRepository,subjectRepository, classroomRepository);
+            }
+        }
 
         private void OpenAddWindow()
         {
@@ -277,7 +296,18 @@ namespace EducationalPlatform.ViewModels
 
             if (DisplayedList == EDisplayedList.Teachers)
             {
-                windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, false);
+                windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, classroomRepository, false);
+                windowService.ShowTeacherDetailsView(this, windowService, teacherRepository, subjectRepository, classroomRepository);
+            }
+
+            if (DisplayedList == EDisplayedList.Specializations)
+            {
+                windowService.ShowAddOrEditSpecializationView(this, windowService, specializationRepository, false);
+            }
+
+            if (DisplayedList == EDisplayedList.Subjects)
+            {
+                windowService.ShowAddOrEditSubjectView(this, windowService, subjectRepository, false);
             }
         }
 
@@ -290,7 +320,17 @@ namespace EducationalPlatform.ViewModels
 
             if (DisplayedList == EDisplayedList.Teachers)
             {
-                windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, true);
+                windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, classroomRepository, true);
+            }
+
+            if (DisplayedList == EDisplayedList.Specializations)
+            {
+                windowService.ShowAddOrEditSpecializationView(this, windowService, specializationRepository, true);
+            }
+
+            if (DisplayedList == EDisplayedList.Subjects)
+            {
+                windowService.ShowAddOrEditSubjectView(this, windowService, subjectRepository, true);
             }
         }
 
@@ -315,6 +355,26 @@ namespace EducationalPlatform.ViewModels
                 Teachers.Clear();
                 Teachers.AddRange(teacherRepository.GetAll());
             }
+
+            if (DisplayedList == EDisplayedList.Specializations && SelectedSpecialization != null)
+            {
+                var specialization = SelectedSpecialization;
+
+                specializationRepository.Delete(specialization.Id);
+
+                Specializations.Clear();
+                Specializations.AddRange(specializationRepository.GetAll());
+            }
+        }
+
+        public void ListenAddOrEditTeacherViewModel(AddOrEditTeacherViewModel viewModel)
+        {
+            viewModel.NewTeacherCreated += Handle_NewTeacherCreated;
+        }
+
+        private void Handle_NewTeacherCreated(object sender, NewTeacherEventArgs e)
+        {
+            SelectedTeacher = e.Data;
         }
     }
 }

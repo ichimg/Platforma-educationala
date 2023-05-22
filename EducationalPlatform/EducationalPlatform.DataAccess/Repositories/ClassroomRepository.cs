@@ -34,12 +34,12 @@ namespace EducationalPlatform.DataAccess.Repositories
 
         public IEnumerable<Classroom> GetAll()
         {
-            return dbContext.Classrooms.Include(c => c.Specialization).Include(c => c.Teacher);
+            return dbContext.Classrooms.Include(c => c.Specialization).Include(c => c.Teacher).Include(s => s.Teachers);
         }
 
         public Classroom GetById(int id)
         {
-            return dbContext.Classrooms.Include(c => c.Specialization).Include(c => c.Teacher).FirstOrDefault(c => c.Id == id);
+            return dbContext.Classrooms.Include(c => c.Specialization).Include(c => c.Teacher).Include(s => s.Teachers).FirstOrDefault(c => c.Id == id);
         }
 
         public void Update(Classroom entity)

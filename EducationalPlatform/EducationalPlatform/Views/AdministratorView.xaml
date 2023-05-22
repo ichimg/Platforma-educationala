@@ -34,7 +34,7 @@
                     <GridViewColumn Header="Nume"  Width="190" DisplayMemberBinding="{Binding Person.FullName}"/>
                     <GridViewColumn Header="CNP" Width="200" DisplayMemberBinding="{Binding Person.Cnp}"/>
                     <GridViewColumn Header="Clasa" Width="170" DisplayMemberBinding="{Binding Classroom.FullName}"/>
-                    <GridViewColumn Header="Specializare" Width="180" DisplayMemberBinding="{Binding Specialization.Name}"/>
+                    <GridViewColumn Header="Specializare" Width="180" DisplayMemberBinding="{Binding Classroom.Specialization.Name}"/>
                 </GridView>
             </ListView.View>
         </ListView>

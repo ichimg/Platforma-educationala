@@ -6,9 +6,7 @@
         public int PersonId { get; set; }
         public Person Person { get; set; }
         public int? ClassroomId { get; set; }
-        public Classroom Classroom { get; set; }
-        public int? SpecializationId { get; set; }
-        public Specialization Specialization { get; set; }
+        public Classroom? Classroom { get; set; }
 
         public Student()
         {

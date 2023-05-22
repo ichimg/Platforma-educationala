@@ -35,12 +35,12 @@ namespace EducationalPlatform.DataAccess.Repositories
 
         public IEnumerable<Subject> GetAll()
         {
-            return dbContext.Subjects.Include(s => s.Specializations);
+            return dbContext.Subjects.Include(s => s.Specializations).Include(s => s.Teachers);
         }
 
         public Subject GetById(int id)
         {
-            return dbContext.Subjects.Include(s => s.Specializations).FirstOrDefault(s => s.Id == id);
+            return dbContext.Subjects.Include(s => s.Specializations).Include(s => s.Teachers).FirstOrDefault(s => s.Id == id);
         }
 
         public void Update(Subject entity)

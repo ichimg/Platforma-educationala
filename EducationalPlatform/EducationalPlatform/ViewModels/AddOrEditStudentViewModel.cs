@@ -160,7 +160,6 @@ namespace EducationalPlatform.ViewModels
             {
                 Person = personToAdd,
                 Classroom = chosenClassroom,
-                Specialization = chosenClassroom.Specialization
             };
 
             personRepository.Add(personToAdd);
