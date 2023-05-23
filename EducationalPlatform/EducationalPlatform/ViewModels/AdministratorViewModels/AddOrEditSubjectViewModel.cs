@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Documents;
 using System.Collections.Generic;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AddOrEditSubjectViewModel : ViewModelBase
     {
@@ -25,7 +25,7 @@ namespace EducationalPlatform.ViewModels
             AdministratorViewModel administratorViewModel,
             bool isEditing)
         {
-            this.subjectRepository = specializationRepository ?? throw new ArgumentNullException(nameof(specializationRepository));
+            subjectRepository = specializationRepository ?? throw new ArgumentNullException(nameof(specializationRepository));
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
             this.administratorViewModel = administratorViewModel ?? throw new ArgumentNullException(nameof(administratorViewModel));
             this.isEditing = isEditing;
@@ -77,7 +77,7 @@ namespace EducationalPlatform.ViewModels
         {
             Subject subjectToAdd = new Subject
             {
-                Name = this.Name,
+                Name = Name,
                 Specializations = SelectedSpecializations
             };
 

@@ -6,7 +6,7 @@ using EducationalPlatform.Services;
 using System;
 using System.Windows.Input;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AddOrEditSpecializationViewModel : ViewModelBase
     {
@@ -69,7 +69,7 @@ namespace EducationalPlatform.ViewModels
         {
             Specialization specializationToAdd = new Specialization
             {
-                Name = this.Name
+                Name = Name
             };
 
             specializationRepository.Add(specializationToAdd);

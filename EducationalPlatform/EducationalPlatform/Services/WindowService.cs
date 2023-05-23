@@ -1,7 +1,9 @@
 ﻿using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
-using EducationalPlatform.ViewModels;
+using EducationalPlatform.ViewModels.AdministratorViewModels;
+using EducationalPlatform.ViewModels.TeacherViewModels;
 using EducationalPlatform.Views;
+using EducationalPlatform.Views.TeacherViews;
 using System;
 
 namespace EducationalPlatform.Services
@@ -137,6 +139,32 @@ namespace EducationalPlatform.Services
             window.ShowDialog();
         }
 
+        // Teacher windows
+        public void ShowTeacherView(Person loggedUser,
+          WindowService windowService,
+          IRepository<Person> personRepository,
+          IRepository<Student> studentRepository,
+          IRepository<Teacher> teacherRepository,
+          IRepository<Classroom> classroomRepository,
+          IRepository<Specialization> specializationRepository,
+          IRepository<Subject> subjectRepository,
+          IRepository<TeachingMaterial>  teachingMaterialRepository)
+        {
+            TeacherViewModel viewModel = new TeacherViewModel(loggedUser, 
+                windowService,
+                personRepository,
+                studentRepository,
+                teacherRepository,
+                classroomRepository,
+                specializationRepository,
+                subjectRepository,
+                teachingMaterialRepository
+                );
+            TeacherView window = new TeacherView(viewModel);
+
+            window.Show();
+        }
+
     }
 
    public enum EDisplayedList
@@ -145,6 +173,7 @@ namespace EducationalPlatform.Services
         Teachers,
         Specializations,
         Subjects,
+        TeachingMaterials,
         None
     }
 }

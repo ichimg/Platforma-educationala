@@ -19,6 +19,7 @@ namespace EducationalPlatform.DataAccess
         public DbSet<Specialization> Specializations { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
+        public DbSet<TeachingMaterial> TeachingMaterials { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,9 +28,6 @@ namespace EducationalPlatform.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Absence>().HasOne(c => c.Teacher).WithOne().OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Absence>().HasOne(c => c.Student).WithOne().OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<Classroom>()
             .HasOne(c => c.Teacher)
             .WithOne()

@@ -20,6 +20,7 @@ namespace EducationalPlatform.ViewModels
         private readonly IRepository<Classroom> classroomRepository;
         private readonly IRepository<Specialization> specializationRepository;
         private readonly IRepository<Subject> subjectRepository;
+        private readonly IRepository<TeachingMaterial> teachingMaterialRepository;
 
 
         public AuthenticationViewModel(IMessageBoxService messageBoxService,
@@ -29,7 +30,8 @@ namespace EducationalPlatform.ViewModels
             IRepository<Teacher> teacherRepository,
             IRepository<Classroom> classroomRepository,
             IRepository<Specialization> specializationRepository,
-            IRepository<Subject> subjectRepository
+            IRepository<Subject> subjectRepository,
+            IRepository<TeachingMaterial> teachingMaterialRepository
             )
         {
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
@@ -40,6 +42,7 @@ namespace EducationalPlatform.ViewModels
             this.classroomRepository = classroomRepository ?? throw new ArgumentNullException(nameof(classroomRepository));
             this.specializationRepository = specializationRepository ?? throw new ArgumentNullException(nameof(specializationRepository));
             this.subjectRepository = subjectRepository ?? throw new ArgumentNullException(nameof(subjectRepository));
+            this.teachingMaterialRepository = teachingMaterialRepository ?? throw new ArgumentNullException(nameof(teachingMaterialRepository));
         }
 
         private string username;
@@ -66,9 +69,9 @@ namespace EducationalPlatform.ViewModels
 
         public void Login()
         {
-            var results = personRepository.GetAll().Where(p => p.Username == Username && p.Password == Password).FirstOrDefault();
+            var loggedUser = personRepository.GetAll().Where(p => p.Username == Username && p.Password == Password).FirstOrDefault();
 
-            if (results != null && results.Role == ERole.Administrator)
+            if (loggedUser != null && loggedUser.Role == ERole.Administrator)
             {
                 windowService.ShowAdminView(windowService, 
                     personRepository,
@@ -78,12 +81,26 @@ namespace EducationalPlatform.ViewModels
                     specializationRepository,
                     subjectRepository);
                 RequestClose?.Invoke();
+                return;
             }
 
-            else
+            if (loggedUser != null && loggedUser.Role == ERole.Teacher)
             {
-                messageBoxService.ShowError("Login failed");
+                windowService.ShowTeacherView(loggedUser,
+                    windowService,
+                    personRepository,
+                    studentRepository,
+                    teacherRepository,
+                    classroomRepository,
+                    specializationRepository,
+                    subjectRepository,
+                    teachingMaterialRepository);
+                RequestClose?.Invoke();
+                return;
             }
+
+             messageBoxService.ShowError("Login failed");
+           
         }
     }
 }

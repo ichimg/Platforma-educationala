@@ -7,7 +7,7 @@ using System.Linq;
 using EducationalPlatform.Extensions;
 using System.Collections.ObjectModel;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AssignSubjectViewModel : ViewModelBase
     {

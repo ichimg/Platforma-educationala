@@ -1,7 +1,8 @@
-﻿<Window x:Class="EducationalPlatform.Views.AssignClassView"
+﻿<mah:MetroWindow x:Class="EducationalPlatform.Views.AssignClassView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EducationalPlatform.Views"
         mc:Ignorable="d"
@@ -29,4 +30,4 @@
             <Button Content="Cancel" Width="75" Margin="5" Style="{StaticResource MahApps.Styles.Button.Square}" IsCancel="True" />
         </StackPanel>
     </Grid>
-</Window>
+</mah:MetroWindow>

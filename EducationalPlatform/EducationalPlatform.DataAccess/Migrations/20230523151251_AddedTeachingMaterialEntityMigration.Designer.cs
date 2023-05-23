@@ -4,6 +4,7 @@ using EducationalPlatform.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationalPlatform.DataAccess.Migrations
 {
     [DbContext(typeof(EducationalPlatformDbContext))]
-    partial class EducationalPlatformDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230523151251_AddedTeachingMaterialEntityMigration")]
+    partial class AddedTeachingMaterialEntityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,9 +290,6 @@ namespace EducationalPlatform.DataAccess.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Semester")
-                        .HasColumnType("int");
 
                     b.Property<int?>("SubjectId")
                         .HasColumnType("int");

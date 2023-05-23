@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AddOrEditStudentViewModel : ViewModelBase
     {
@@ -127,10 +127,10 @@ namespace EducationalPlatform.ViewModels
 
         private void EditStudent()
         {
-            administratorViewModel.SelectedStudent.Person.FullName = this.FullName;
-            administratorViewModel.SelectedStudent.Person.Cnp = this.Cnp;
-            administratorViewModel.SelectedStudent.Person.Username = this.Username;
-            administratorViewModel.SelectedStudent.Person.Password = this.Password;
+            administratorViewModel.SelectedStudent.Person.FullName = FullName;
+            administratorViewModel.SelectedStudent.Person.Cnp = Cnp;
+            administratorViewModel.SelectedStudent.Person.Username = Username;
+            administratorViewModel.SelectedStudent.Person.Password = Password;
 
             Classroom chosenClassroom = classroomRepository.GetAll().Where(c => c.FullName == FullClassName).FirstOrDefault();
             administratorViewModel.SelectedStudent.Classroom = chosenClassroom;
@@ -147,10 +147,10 @@ namespace EducationalPlatform.ViewModels
         {
             Person personToAdd = new Person
             {
-                FullName = this.FullName,
-                Cnp = this.Cnp,
-                Username = this.Username,
-                Password = this.Password,
+                FullName = FullName,
+                Cnp = Cnp,
+                Username = Username,
+                Password = Password,
                 Role = ERole.Student
             };
 

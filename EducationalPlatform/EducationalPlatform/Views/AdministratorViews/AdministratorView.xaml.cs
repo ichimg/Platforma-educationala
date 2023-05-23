@@ -1,5 +1,5 @@
 ﻿using EducationalPlatform.Services;
-using EducationalPlatform.ViewModels;
+using EducationalPlatform.ViewModels.AdministratorViewModels;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;

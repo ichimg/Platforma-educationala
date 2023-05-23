@@ -1,5 +1,5 @@
-﻿using EducationalPlatform.DataAccess.Repositories;
-using EducationalPlatform.ViewModels;
+﻿using EducationalPlatform.ViewModels.AdministratorViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +17,15 @@ using System.Windows.Shapes;
 namespace EducationalPlatform.Views
 {
     /// <summary>
-    /// Interaction logic for AddOrEditStudentView.xaml
+    /// Interaction logic for AddOrEditTeacherView.xaml
     /// </summary>
-    public partial class AddOrEditStudentView : Window
+    public partial class AddOrEditTeacherView : MetroWindow
     {
-        public AddOrEditStudentView(AddOrEditStudentViewModel viewModel)
+        public AddOrEditTeacherView(AddOrEditTeacherViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

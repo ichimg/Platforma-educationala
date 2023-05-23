@@ -1,5 +1,6 @@
 ﻿using EducationalPlatform.DataAccess.Models;
-using EducationalPlatform.ViewModels;
+using EducationalPlatform.ViewModels.AdministratorViewModels;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace EducationalPlatform.Views
     /// <summary>
     /// Interaction logic for AddOrEditSubjectView.xaml
     /// </summary>
-    public partial class AddOrEditSubjectView : Window
+    public partial class AddOrEditSubjectView : MetroWindow
     {
         private readonly AddOrEditSubjectViewModel viewModel;
         public AddOrEditSubjectView(AddOrEditSubjectViewModel viewModel)

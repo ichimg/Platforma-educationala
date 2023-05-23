@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Documents;
 using System.Collections.Generic;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AssignClassViewModel : ViewModelBase
     {
@@ -30,8 +30,10 @@ namespace EducationalPlatform.ViewModels
         }
 
         private ObservableCollection<Classroom> allClassrooms;
-        public ObservableCollection<Classroom> AllClassrooms { get { return allClassrooms;  }
-            set 
+        public ObservableCollection<Classroom> AllClassrooms
+        {
+            get { return allClassrooms; }
+            set
             {
                 allClassrooms = value;
                 NotifyPropertyChanged(nameof(AllClassrooms));

@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AddOrEditTeacherViewModel : ViewModelBase
     {
@@ -106,7 +106,7 @@ namespace EducationalPlatform.ViewModels
                 NotifyPropertyChanged(nameof(MasterChosenClass));
             }
         }
-        
+
 
         private bool isMaster;
         public bool IsMaster
@@ -143,10 +143,10 @@ namespace EducationalPlatform.ViewModels
         {
             Person personToAdd = new Person
             {
-                FullName = this.FullName,
-                Cnp = this.Cnp,
-                Username = this.Username,
-                Password = this.Password,
+                FullName = FullName,
+                Cnp = Cnp,
+                Username = Username,
+                Password = Password,
                 Role = ERole.Teacher
             };
 
@@ -154,7 +154,7 @@ namespace EducationalPlatform.ViewModels
             Teacher teacherToAdd = new Teacher
             {
                 Person = personToAdd,
-                IsMaster = this.IsMaster
+                IsMaster = IsMaster
             };
 
 
@@ -171,15 +171,15 @@ namespace EducationalPlatform.ViewModels
 
         private void EditTeacher()
         {
-            administratorViewModel.SelectedTeacher.Person.FullName = this.FullName;
-            administratorViewModel.SelectedTeacher.Person.Cnp = this.Cnp;
-            administratorViewModel.SelectedTeacher.Person.Username = this.Username;
-            administratorViewModel.SelectedTeacher.Person.Password = this.Password;
-            administratorViewModel.SelectedTeacher.IsMaster = this.IsMaster;
+            administratorViewModel.SelectedTeacher.Person.FullName = FullName;
+            administratorViewModel.SelectedTeacher.Person.Cnp = Cnp;
+            administratorViewModel.SelectedTeacher.Person.Username = Username;
+            administratorViewModel.SelectedTeacher.Person.Password = Password;
+            administratorViewModel.SelectedTeacher.IsMaster = IsMaster;
 
             Classroom previousClassroom = classroomRepository.GetAll().Where(c => c.TeacherId == administratorViewModel.SelectedTeacher.Id).FirstOrDefault();
 
-            if(previousClassroom != null)
+            if (previousClassroom != null)
             {
                 previousClassroom.TeacherId = null;
                 previousClassroom.Teacher = null;

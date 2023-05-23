@@ -10,10 +10,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace EducationalPlatform.ViewModels
+namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AdministratorViewModel : ViewModelBase
     {
+
         public event Action RequestShowStudentsList;
         public event Action RequestShowTeachersList;
         public event Action RequestShowSpecializationsList;
@@ -235,9 +236,6 @@ namespace EducationalPlatform.ViewModels
         }
 
         private ICommand openEditViewCommand;
-        /// <summary>
-        ///		Button command to open the edit student form.
-        /// </summary>
         public ICommand OpenEditViewCommand
         {
             get
@@ -251,9 +249,6 @@ namespace EducationalPlatform.ViewModels
         }
 
         private ICommand deleteCommand;
-        /// <summary>
-        ///		Button command to open the edit student form.
-        /// </summary>
         public ICommand DeleteCommand
         {
             get
@@ -283,7 +278,7 @@ namespace EducationalPlatform.ViewModels
         {
             if (DisplayedList == EDisplayedList.Teachers)
             {
-                windowService.ShowTeacherDetailsView(this, windowService, teacherRepository,subjectRepository, classroomRepository);
+                windowService.ShowTeacherDetailsView(this, windowService, teacherRepository, subjectRepository, classroomRepository);
             }
         }
 
@@ -297,7 +292,11 @@ namespace EducationalPlatform.ViewModels
             if (DisplayedList == EDisplayedList.Teachers)
             {
                 windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, classroomRepository, false);
-                windowService.ShowTeacherDetailsView(this, windowService, teacherRepository, subjectRepository, classroomRepository);
+
+                if (SelectedTeacher != null)
+                {
+                    windowService.ShowTeacherDetailsView(this, windowService, teacherRepository, subjectRepository, classroomRepository);
+                }
             }
 
             if (DisplayedList == EDisplayedList.Specializations)
