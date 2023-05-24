@@ -141,6 +141,7 @@ namespace EducationalPlatform.Services
 
         // Teacher windows
         public void ShowTeacherView(Person loggedUser,
+          IMessageBoxService messageBoxService,
           WindowService windowService,
           IRepository<Person> personRepository,
           IRepository<Student> studentRepository,
@@ -148,9 +149,12 @@ namespace EducationalPlatform.Services
           IRepository<Classroom> classroomRepository,
           IRepository<Specialization> specializationRepository,
           IRepository<Subject> subjectRepository,
-          IRepository<TeachingMaterial>  teachingMaterialRepository)
+          IRepository<TeachingMaterial>  teachingMaterialRepository,
+          IRepository<Grade> gradeRepository,
+          IRepository<Absence> absenceRepository)
         {
             TeacherViewModel viewModel = new TeacherViewModel(loggedUser, 
+                messageBoxService,
                 windowService,
                 personRepository,
                 studentRepository,
@@ -158,13 +162,54 @@ namespace EducationalPlatform.Services
                 classroomRepository,
                 specializationRepository,
                 subjectRepository,
-                teachingMaterialRepository
+                teachingMaterialRepository,
+                gradeRepository,
+                absenceRepository
                 );
             TeacherView window = new TeacherView(viewModel);
 
             window.Show();
         }
 
+        public void ShowStudentDetailsView(TeacherViewModel teacherViewModel,
+            WindowService windowService,
+            IMessageBoxService messageBoxService,
+            IRepository<Grade> gradeRepository,
+            IRepository<Absence> absenceRepository)
+        {
+            StudentDetailsViewModel viewModel = new StudentDetailsViewModel(teacherViewModel, windowService, messageBoxService, gradeRepository, absenceRepository);
+
+            StudentDetailsView window = new StudentDetailsView(viewModel);
+
+            window.ShowDialog();
+        }
+
+        public void ShowAddGradeView(StudentDetailsViewModel studentDetailsViewModel, Teacher loggedTeacher, IMessageBoxService messageBoxService, Student? selectedStudent, IRepository<Grade> gradeRepository)
+        {
+            AddGradeViewModel viewModel = new AddGradeViewModel(studentDetailsViewModel, loggedTeacher, messageBoxService, selectedStudent, gradeRepository);
+
+            AddGradeView window = new AddGradeView(viewModel);
+
+            window.ShowDialog();
+        }
+
+        public void ShowAddAbsenceView(StudentDetailsViewModel studentDetailsViewModel, Teacher loggedTeacher, IMessageBoxService messageBoxService, Student? selectedStudent, IRepository<Absence> absenceRepository)
+        {
+            AddAbsenceViewModel viewModel = new AddAbsenceViewModel(studentDetailsViewModel, loggedTeacher, messageBoxService, selectedStudent, absenceRepository);
+
+            AddAbsenceView window = new AddAbsenceView(viewModel);
+
+            window.ShowDialog();
+        }
+
+        public void ShowAddTeachingMaterialView(TeacherViewModel teacherViewModel, IRepository<TeachingMaterial> teachingMaterialRepository, IMessageBoxService messageBoxService)
+        {
+            AddTeachingMaterialViewModel viewModel = new AddTeachingMaterialViewModel(teacherViewModel, teachingMaterialRepository, messageBoxService);
+
+            AddTeachingMaterialView window = new AddTeachingMaterialView(viewModel);
+
+            window.ShowDialog();
+        }
     }
 
    public enum EDisplayedList

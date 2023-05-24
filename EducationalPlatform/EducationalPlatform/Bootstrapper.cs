@@ -21,6 +21,8 @@ namespace EducationalPlatform
             IRepository<Specialization> specializationRepository = new SpecializationRepository(dbContext);
             IRepository<Subject> subjectRepository = new SubjectRepository(dbContext);
             IRepository<TeachingMaterial> teachingMaterialRepository = new TeachingMaterialRepository(dbContext);
+            IRepository<Grade> gradeRepository = new GradeRepository(dbContext);
+            IRepository<Absence> absenceRepository = new AbsenceRepository(dbContext);
             return new AuthenticationViewModel(messageBoxService,
                 windowService,
                 personRepository,
@@ -29,7 +31,9 @@ namespace EducationalPlatform
                 classroomRepository,
                 specializationRepository,
                 subjectRepository,
-                teachingMaterialRepository);
+                teachingMaterialRepository,
+                gradeRepository,
+                absenceRepository);
         }
     }
 }

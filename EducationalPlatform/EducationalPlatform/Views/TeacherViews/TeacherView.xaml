@@ -7,10 +7,11 @@
         xmlns:local="clr-namespace:EducationalPlatform.Views"
         xmlns:conv="clr-namespace:EducationalPlatform.EnumConverters"
         mc:Ignorable="d"
-        Title="Panou profesor" Height="450" Width="1200">
+        Title="Panou profesor" Height="450" Width="1230">
 
     <Window.Resources>
         <conv:ERoleToStringConverter x:Key="ERoleToStringConverter"/>
+        <conv:ESemesterToStringConverter x:Key="ESemesterToStringConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -27,10 +28,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Label Content="{Binding LoggedTeacher.Person.FullName}" Grid.Column="0" Grid.Row="0" Margin="7" FontWeight="Bold" FontSize="15"/>
         <Label Content="{Binding LoggedTeacher.Person.Role, Converter={StaticResource ERoleToStringConverter}}" Grid.Column="0" Grid.Row="1" Margin="10, -15, 0, 0"/>
+        <Button Content="mod diriginte" Margin="10" Width="100" Grid.Column="1" Background="#2081E8" Foreground="White" Command="{Binding ActivateMasterModeCommand}"/>
 
         <Image Grid.Column="2" Height="60" Width="500" Margin="0,38,0,0" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Source="pack://application:,,,/Images/dashboard.png" Visibility="Visible"/>
 
@@ -46,12 +49,12 @@
         </ListView>
 
 
-        <ListView Name="TeachingMaterialsList" ItemsSource="{Binding TeachingMaterialsList}" SelectionMode="Single" Grid.Column="2" Height="120" Grid.Row="2" Margin="58,143,-49,10" Grid.ColumnSpan="2" Visibility="Hidden" SelectedItem="{Binding SelectedTeacher}">
+        <ListView Name="TeachingMaterialsList" ItemsSource="{Binding TeachingMaterialsList}" SelectionMode="Single" Grid.Column="2" Height="120" Grid.Row="2" Margin="58,143,-49,10" Grid.ColumnSpan="2" Visibility="Hidden" SelectedItem="{Binding SelectedTeachingMaterial}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Nume"  Width="370" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Materie"  Width="370" DisplayMemberBinding="{Binding Subject.Name}"/>
-                    <GridViewColumn Header="Semestru"  Width="370" DisplayMemberBinding="{Binding Semester}"/>
+                    <GridViewColumn Header="Semestru"  Width="370" DisplayMemberBinding="{Binding Semester, Converter={StaticResource ESemesterToStringConverter}}"/>
                 </GridView>
             </ListView.View>
         </ListView>

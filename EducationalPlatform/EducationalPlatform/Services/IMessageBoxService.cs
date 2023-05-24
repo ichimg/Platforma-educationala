@@ -5,5 +5,6 @@
         void ShowError(string messageBoxText);
         void ShowInformation(string messageBoxText);
         void ShowWarning(string messageBoxText);
+        bool AskConfirmation(string messageBoxText);
     }
 }

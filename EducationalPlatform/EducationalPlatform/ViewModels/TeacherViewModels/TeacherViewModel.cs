@@ -1,10 +1,15 @@
 ﻿using EducationalPlatform.Commands;
 using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Windows.Input;
 
 namespace EducationalPlatform.ViewModels.TeacherViewModels
@@ -23,20 +28,27 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
         private readonly IRepository<Specialization> specializationRepository;
         private readonly IRepository<Subject> subjectRepository;
         private readonly IRepository<TeachingMaterial> teachingMaterialRepository;
+        private readonly IRepository<Grade> gradeRepository;
+        private readonly IRepository<Absence> absenceRepository;
 
         private readonly WindowService windowService;
+        private readonly IMessageBoxService messageBoxService;
 
-        public TeacherViewModel(Person loggedUser, WindowService windowService,
+        public TeacherViewModel(Person loggedUser, 
+            IMessageBoxService messageBoxService, WindowService windowService,
             IRepository<Person> personRepository,
             IRepository<Student> studentRepository,
             IRepository<Teacher> teacherRepository,
             IRepository<Classroom> classroomRepository,
             IRepository<Specialization> specializationRepository,
             IRepository<Subject> subjectRepository,
-            IRepository<TeachingMaterial>  teachingMaterialRepository)
+            IRepository<TeachingMaterial>  teachingMaterialRepository,
+            IRepository<Grade> gradeRepository,
+            IRepository<Absence> absenceRepository)
         {
             LoggedTeacher = teacherRepository.GetAll().Where(t => t.PersonId == loggedUser.Id).FirstOrDefault();
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
+            this.messageBoxService = messageBoxService ?? throw new ArgumentNullException(nameof(messageBoxService));
             this.personRepository = personRepository ?? throw new ArgumentNullException(nameof(personRepository));
             this.studentRepository = studentRepository ?? throw new ArgumentNullException(nameof(studentRepository));
             this.teacherRepository = teacherRepository ?? throw new ArgumentNullException(nameof(teacherRepository));
@@ -44,6 +56,8 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             this.specializationRepository = specializationRepository ?? throw new ArgumentNullException(nameof(specializationRepository));
             this.subjectRepository = subjectRepository ?? throw new ArgumentNullException(nameof(subjectRepository));
             this.teachingMaterialRepository = teachingMaterialRepository ?? throw new ArgumentNullException(nameof(teachingMaterialRepository));
+            this.gradeRepository = gradeRepository ?? throw new ArgumentNullException(nameof(gradeRepository));
+            this.absenceRepository = absenceRepository ?? throw new ArgumentNullException(nameof(absenceRepository));
 
             Students = new ObservableCollection<Student>(studentRepository.GetAll()
                 .Where(s => LoggedTeacher.Classrooms.Any(c => s.ClassroomId == c.Id))
@@ -90,6 +104,28 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             }
         }
 
+        private Student? selectedStudent;
+        public Student? SelectedStudent
+        {
+            get { return selectedStudent; }
+            set
+            {
+                selectedStudent = value;
+                NotifyPropertyChanged(nameof(SelectedStudent));
+            }
+        }
+
+        private TeachingMaterial? selectedTeachingMaterial;
+        public TeachingMaterial? SelectedTeachingMaterial
+        {
+            get { return selectedTeachingMaterial; }
+            set
+            {
+                selectedTeachingMaterial = value;
+                NotifyPropertyChanged(nameof(SelectedTeachingMaterial));
+            }
+        }
+
         private ICommand showStudentsListCommand;
         public ICommand ShowStudentsListCommand
         {
@@ -123,7 +159,10 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             {
                 if (seeStudentDetailsCommand is null)
                 {
-                    seeStudentDetailsCommand = new RelayCommand(() => OpenStudentDetails(), param => DisplayedList == EDisplayedList.Students);
+                    seeStudentDetailsCommand = new RelayCommand(() => OpenStudentDetails(), 
+                    param => 
+                    DisplayedList == EDisplayedList.Students 
+                    && SelectedStudent != null);
                 }
                 return seeStudentDetailsCommand;
             }
@@ -151,7 +190,7 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             {
                 if (downloadCommand is null)
                 {
-                    downloadCommand = new RelayCommand(() => DownloadTeachingMaterial(), param => DisplayedList == EDisplayedList.TeachingMaterials);
+                    downloadCommand = new RelayCommand(() => DownloadTeachingMaterial(), param => DisplayedList == EDisplayedList.TeachingMaterials && SelectedTeachingMaterial != null);
                 }
                 return downloadCommand;
             }
@@ -164,30 +203,82 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             {
                 if (deleteCommand is null)
                 {
-                    deleteCommand = new RelayCommand(() => DeleteTeachingMaterial(), param => DisplayedList == EDisplayedList.TeachingMaterials);
+                    deleteCommand = new RelayCommand(() => DeleteTeachingMaterial(), param => DisplayedList == EDisplayedList.TeachingMaterials && SelectedTeachingMaterial != null);
                 }
                 return deleteCommand;
             }
         }
 
+        private ICommand activateMasterModeCommand;
+        public ICommand ActivateMasterModeCommand
+        {
+            get
+            {
+                if (activateMasterModeCommand is null)
+                {
+                    activateMasterModeCommand = new RelayCommand(ActivateMasterMode, param => IsMasterMode == false);
+                }
+                return activateMasterModeCommand;
+            }
+        }
+
+        private void ActivateMasterMode()
+        {
+            if((bool)!LoggedTeacher.IsMaster)
+            {
+                messageBoxService.ShowError("Nu esti diriginte la o anumita clasa!");
+                return;
+            }
+
+            var masteredClassroom = classroomRepository.GetAll().Where(c => c.TeacherId == LoggedTeacher.Id).FirstOrDefault();
+
+            IsMasterMode = true;
+            Students.Clear();
+            TeachingMaterialsList.Clear();
+
+            var list = new ObservableCollection<Student>(studentRepository.GetAll()
+                        .OrderByDescending(s => s.ClassroomId == masteredClassroom.Id)
+                        .ThenBy(s => s.Classroom.Year)
+                        .ThenBy(s => s.Classroom.Letter)
+                        .ThenBy(s => s.Person.FullName)
+                        .Where(s => LoggedTeacher.Classrooms.Any(c => s.ClassroomId == c.Id) || s.ClassroomId == masteredClassroom.Id));
+
+            Students.AddRange(list);
+        }
+
+        public bool IsMasterMode { get; set; }
+
+
+
         private void DeleteTeachingMaterial()
         {
-            throw new NotImplementedException();
+            teachingMaterialRepository.Delete(SelectedTeachingMaterial.Id);
+
+            TeachingMaterialsList.Clear();
+            var list = teachingMaterialRepository.GetAll();
+            TeachingMaterialsList.AddRange(list);
+
         }
 
         private void DownloadTeachingMaterial()
         {
-            throw new NotImplementedException();
+            string savePath = ConfigurationManager.AppSettings["TeachingMaterialsPath"];
+
+            var document = teachingMaterialRepository.GetAll().FirstOrDefault(d => d.Id == SelectedTeachingMaterial.Id);
+
+            File.WriteAllBytes($"{savePath}{document.Id}-{document.Subject.Name}-{document.Name}.pdf", document.Bytes);
+            messageBoxService.ShowInformation("Material didactic descarcat cu succes!");
         }
 
         private void OpenAddWindow()
         {
-            throw new NotImplementedException();
+            windowService.ShowAddTeachingMaterialView(this, teachingMaterialRepository, messageBoxService);
         }
 
         private void OpenStudentDetails()
         {
-            throw new NotImplementedException();
+            windowService.ShowStudentDetailsView(this, windowService, messageBoxService, gradeRepository,
+                absenceRepository);
         }
     }
 }

@@ -140,12 +140,16 @@ namespace EducationalPlatform.ViewModels.AdministratorViewModels
         private void DeleteClass()
         {
             administratorViewModel.SelectedTeacher.Classrooms.Remove(SelectedClass);
+            teacherRepository.Update(administratorViewModel.SelectedTeacher);
+
             TeacherClassrooms.Remove(SelectedClass);
         }
 
         private void DeleteSubject()
         {
             administratorViewModel.SelectedTeacher.Subjects.Remove(SelectedSubject);
+            teacherRepository.Update(administratorViewModel.SelectedTeacher);
+
             TeacherSubjects.Remove(SelectedSubject);
         }
 

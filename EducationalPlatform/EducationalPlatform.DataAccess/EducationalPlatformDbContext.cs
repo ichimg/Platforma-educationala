@@ -33,6 +33,13 @@ namespace EducationalPlatform.DataAccess
             .WithOne()
             .HasForeignKey<Classroom>(c => c.TeacherId);
 
+            modelBuilder.Entity<Absence>()
+            .HasIndex(e => e.StudentId)
+            .IsUnique(false);
+
+            modelBuilder.Entity<Absence>()
+            .HasIndex(e => e.TeacherId)
+            .IsUnique(false);
         }
     }
 }

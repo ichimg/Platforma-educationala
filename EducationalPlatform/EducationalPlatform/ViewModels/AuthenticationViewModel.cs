@@ -2,6 +2,7 @@
 using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
 using EducationalPlatform.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -21,6 +22,8 @@ namespace EducationalPlatform.ViewModels
         private readonly IRepository<Specialization> specializationRepository;
         private readonly IRepository<Subject> subjectRepository;
         private readonly IRepository<TeachingMaterial> teachingMaterialRepository;
+        private readonly IRepository<Grade> gradeRepository;
+        private readonly IRepository<Absence> absenceRepository;
 
 
         public AuthenticationViewModel(IMessageBoxService messageBoxService,
@@ -31,7 +34,9 @@ namespace EducationalPlatform.ViewModels
             IRepository<Classroom> classroomRepository,
             IRepository<Specialization> specializationRepository,
             IRepository<Subject> subjectRepository,
-            IRepository<TeachingMaterial> teachingMaterialRepository
+            IRepository<TeachingMaterial> teachingMaterialRepository,
+            IRepository<Grade> gradeRepository,
+            IRepository<Absence> absenceRepository 
             )
         {
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
@@ -43,6 +48,8 @@ namespace EducationalPlatform.ViewModels
             this.specializationRepository = specializationRepository ?? throw new ArgumentNullException(nameof(specializationRepository));
             this.subjectRepository = subjectRepository ?? throw new ArgumentNullException(nameof(subjectRepository));
             this.teachingMaterialRepository = teachingMaterialRepository ?? throw new ArgumentNullException(nameof(teachingMaterialRepository));
+            this.gradeRepository = gradeRepository ?? throw new ArgumentNullException(nameof(gradeRepository));
+            this.absenceRepository = absenceRepository ?? throw new ArgumentNullException(nameof(absenceRepository));
         }
 
         private string username;
@@ -87,6 +94,7 @@ namespace EducationalPlatform.ViewModels
             if (loggedUser != null && loggedUser.Role == ERole.Teacher)
             {
                 windowService.ShowTeacherView(loggedUser,
+                    messageBoxService,
                     windowService,
                     personRepository,
                     studentRepository,
@@ -94,7 +102,9 @@ namespace EducationalPlatform.ViewModels
                     classroomRepository,
                     specializationRepository,
                     subjectRepository,
-                    teachingMaterialRepository);
+                    teachingMaterialRepository,
+                    gradeRepository,
+                    absenceRepository);
                 RequestClose?.Invoke();
                 return;
             }
