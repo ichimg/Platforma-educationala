@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.0.1" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -21,13 +22,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EducationalPlatform.DataAccess\EducationalPlatform.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Images\dashboard.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationalPlatform.DataAccess\EducationalPlatform.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

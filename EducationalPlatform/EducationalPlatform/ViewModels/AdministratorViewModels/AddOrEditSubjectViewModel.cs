@@ -1,13 +1,12 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
-using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Services;
 using System.Windows.Input;
 using System;
 using EducationalPlatform.Extensions;
 using System.Collections.ObjectModel;
-using System.Windows.Documents;
 using System.Collections.Generic;
+using EducationalPlatform.DataAccess.Repositories;
 
 namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {

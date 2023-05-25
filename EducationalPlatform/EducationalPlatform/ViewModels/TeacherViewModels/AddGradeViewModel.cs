@@ -1,9 +1,8 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
-using EducationalPlatform.ViewModels.AdministratorViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,7 +18,11 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
         private Student? selectedStudent;
         private readonly IRepository<Grade> gradeRepository;
 
-        public AddGradeViewModel(StudentDetailsViewModel studentDetailsViewModel, Teacher loggedTeacher, IMessageBoxService messageBoxService, Student? selectedStudent, IRepository<Grade> gradeRepository)
+        public AddGradeViewModel(StudentDetailsViewModel studentDetailsViewModel,
+            Teacher loggedTeacher,
+            IMessageBoxService messageBoxService,
+            Student? selectedStudent,
+            IRepository<Grade> gradeRepository)
         {
             this.loggedTeacher = loggedTeacher ?? throw new ArgumentNullException(nameof(loggedTeacher));
             this.selectedStudent = selectedStudent ?? throw new ArgumentNullException(nameof(selectedStudent));
@@ -28,7 +31,9 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
             this.studentDetailsViewModel = studentDetailsViewModel ?? throw new ArgumentNullException(nameof(studentDetailsViewModel));
         }
 
-        public ObservableCollection<Subject> TeacherSubjects => new ObservableCollection<Subject>(loggedTeacher.Subjects);
+        public ObservableCollection<Subject> TeacherSubjects => new ObservableCollection<Subject>(loggedTeacher.Subjects
+            .Where(sb => sb.Specializations
+            .Any(spe => spe.Id == selectedStudent.Classroom.SpecializationId)));
 
         private string grade;
         public string Grade

@@ -1,9 +1,7 @@
-﻿using EducationalPlatform.DataAccess.Models;
+﻿using EducationalPlatform.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-
 using System.Configuration;
-using System.Diagnostics.Contracts;
-using System.Reflection.Metadata;
+
 
 
 namespace EducationalPlatform.DataAccess

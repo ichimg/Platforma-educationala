@@ -1,9 +1,8 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
-using EducationalPlatform.ViewModels.AdministratorViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

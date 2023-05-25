@@ -1,15 +1,13 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Windows.Input;
 
 namespace EducationalPlatform.ViewModels.TeacherViewModels
@@ -234,7 +232,7 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
 
             IsMasterMode = true;
             Students.Clear();
-            TeachingMaterialsList.Clear();
+
 
             var list = new ObservableCollection<Student>(studentRepository.GetAll()
                         .OrderByDescending(s => s.ClassroomId == masteredClassroom.Id)
@@ -278,7 +276,7 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
         private void OpenStudentDetails()
         {
             windowService.ShowStudentDetailsView(this, windowService, messageBoxService, gradeRepository,
-                absenceRepository);
+                absenceRepository, classroomRepository);
         }
     }
 }

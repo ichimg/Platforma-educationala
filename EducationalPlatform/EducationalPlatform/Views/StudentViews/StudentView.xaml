@@ -1,0 +1,68 @@
+﻿<mah:MetroWindow x:Class="EducationalPlatform.Views.StudentViews.StudentView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:EducationalPlatform.EnumConverters"
+        xmlns:local="clr-namespace:EducationalPlatform.Views.StudentViews"
+        mc:Ignorable="d"
+        Title="StudentView" Height="450" Width="1150">
+    <Window.Resources>
+        <conv:ERoleToStringConverter x:Key="ERoleToStringConverter"/>
+        <conv:ESemesterToStringConverter x:Key="ESemesterToStringConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="{Binding LoggedStudent.Person.FullName}" Grid.Column="0" Grid.Row="0" Margin="7" FontWeight="Bold" FontSize="15"/>
+        <Label Content="{Binding LoggedStudent.Person.Role, Converter={StaticResource ERoleToStringConverter}}" Grid.Column="0" Grid.Row="1" Margin="10, -15, 0, 0"/>
+       
+        <Image Grid.Column="2" Height="60" Width="500" Margin="0,38,0,0" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Source="pack://application:,,,/Images/dashboard.png" Visibility="Visible"/>
+
+        <ListView Name="SubjectsList"  ItemsSource="{Binding Subjects}" SelectionMode="Single" Grid.Column="2" Height="120" Grid.Row="2" Margin="58,143,-49,10" Grid.ColumnSpan="2" Visibility="Hidden" SelectedItem="{Binding SelectedSubject}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nume"  Width="1110" DisplayMemberBinding="{Binding Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+        <ListView Name="TeachingMaterialsList" ItemsSource="{Binding TeachingMaterialsList}" SelectionMode="Single" Grid.Column="2" Height="120" Grid.Row="2" Margin="58,143,-49,10" Grid.ColumnSpan="2" Visibility="Hidden" SelectedItem="{Binding SelectedTeachingMaterial}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nume"  Width="370" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Materie"  Width="370" DisplayMemberBinding="{Binding Subject.Name}"/>
+                    <GridViewColumn Header="Semestru"  Width="370" DisplayMemberBinding="{Binding Semester, Converter={StaticResource ESemesterToStringConverter}}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+        <StackPanel Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Margin="0, -150, 0, 0">
+            <Button Content="Materii" Margin="10" Command="{Binding ShowSubjectsListCommand}"/>
+            <Button Content="Materiale didactice" Margin="10" Command="{Binding ShowTeachingMaterialsListCommand}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="3" Grid.Row="4" VerticalAlignment="Center" Orientation="Horizontal" Margin="-90, 0, 0, 0">
+            <Button Content="descarcare" Margin="10" Width="80" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Command="{Binding DownloadCommand}"/>
+            <Button Content="vezi detalii" Margin="10" Width="80" Style="{DynamicResource MahApps.Styles.Button.Square}" Command="{Binding SeeSubjectDetailsCommand}"/>
+        </StackPanel>
+    </Grid>
+</mah:MetroWindow>

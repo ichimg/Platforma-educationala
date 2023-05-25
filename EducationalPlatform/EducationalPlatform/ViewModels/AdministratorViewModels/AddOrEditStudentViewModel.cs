@@ -1,13 +1,11 @@
-﻿using ControlzEx.Standard;
-using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
+﻿using EducationalPlatform.Commands;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace EducationalPlatform.ViewModels.AdministratorViewModels

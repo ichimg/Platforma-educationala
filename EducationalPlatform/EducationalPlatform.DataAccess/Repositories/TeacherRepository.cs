@@ -1,7 +1,5 @@
-﻿
-
-using EducationalPlatform.DataAccess.Exceptions;
-using EducationalPlatform.DataAccess.Models;
+﻿using EducationalPlatform.DataAccess.Exceptions;
+using EducationalPlatform.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationalPlatform.DataAccess.Repositories
@@ -36,12 +34,12 @@ namespace EducationalPlatform.DataAccess.Repositories
 
         public IEnumerable<Teacher> GetAll()
         {
-            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).Include(t => t.Classrooms);
+            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).ThenInclude(s => s.Specializations).Include(t => t.Classrooms);
         }
 
         public Teacher GetById(int id)
         {
-            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).Include(t => t.Classrooms).FirstOrDefault(t => t.Id == id);
+            return dbContext.Teachers.Include(t => t.Person).Include(t => t.Subjects).ThenInclude(s => s.Specializations).Include(t => t.Classrooms).FirstOrDefault(t => t.Id == id);
         }
 
         public void Update(Teacher entity)

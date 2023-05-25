@@ -1,5 +1,5 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.DataAccess.Repositories;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;

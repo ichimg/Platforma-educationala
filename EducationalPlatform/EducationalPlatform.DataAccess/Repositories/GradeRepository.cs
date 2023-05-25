@@ -1,5 +1,5 @@
 ﻿using EducationalPlatform.DataAccess.Exceptions;
-using EducationalPlatform.DataAccess.Models;
+using EducationalPlatform.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationalPlatform.DataAccess.Repositories

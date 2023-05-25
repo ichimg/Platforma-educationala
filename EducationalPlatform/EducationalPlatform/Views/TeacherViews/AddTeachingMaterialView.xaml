@@ -40,7 +40,7 @@
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,5">
             <TextBlock Text="Cale fisier: " VerticalAlignment="Center" Width="100"/>
-            <TextBox Width="450" Margin="10 0 0 0" Text="{Binding FilePath}"/>
+            <Button  Margin="10 0 0 0" Content="incarca" Width =" 80"  Command="{Binding UploadCommand}"/>
         </StackPanel>
 
         <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">

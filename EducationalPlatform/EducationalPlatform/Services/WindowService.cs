@@ -1,8 +1,10 @@
-﻿using EducationalPlatform.DataAccess.Models;
-using EducationalPlatform.DataAccess.Repositories;
+﻿using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.ViewModels.AdministratorViewModels;
+using EducationalPlatform.ViewModels.StudentViewModels;
 using EducationalPlatform.ViewModels.TeacherViewModels;
 using EducationalPlatform.Views;
+using EducationalPlatform.Views.StudentViews;
 using EducationalPlatform.Views.TeacherViews;
 using System;
 
@@ -65,10 +67,6 @@ namespace EducationalPlatform.Services
             if (isEditing)
             { 
                 EditTeacherFormViewLaunched?.Invoke(); 
-            }
-            else
-            {
-                administratorViewModel.ListenAddOrEditTeacherViewModel(viewModel);
             }
 
             window.ShowDialog();
@@ -175,9 +173,11 @@ namespace EducationalPlatform.Services
             WindowService windowService,
             IMessageBoxService messageBoxService,
             IRepository<Grade> gradeRepository,
-            IRepository<Absence> absenceRepository)
+            IRepository<Absence> absenceRepository,
+            IRepository<Classroom> classroomRepository)
         {
-            StudentDetailsViewModel viewModel = new StudentDetailsViewModel(teacherViewModel, windowService, messageBoxService, gradeRepository, absenceRepository);
+            StudentDetailsViewModel viewModel = new StudentDetailsViewModel(teacherViewModel, windowService, messageBoxService, gradeRepository,
+                classroomRepository, absenceRepository);
 
             StudentDetailsView window = new StudentDetailsView(viewModel);
 
@@ -207,6 +207,29 @@ namespace EducationalPlatform.Services
             AddTeachingMaterialViewModel viewModel = new AddTeachingMaterialViewModel(teacherViewModel, teachingMaterialRepository, messageBoxService);
 
             AddTeachingMaterialView window = new AddTeachingMaterialView(viewModel);
+
+            window.ShowDialog();
+        }
+
+        public void ShowStudentView(Person loggedUser, IMessageBoxService messageBoxService, IRepository<Student> studentRepository, WindowService windowService,
+            IRepository<Subject> subjectRepository,
+            IRepository<TeachingMaterial> teachingMaterialRepository,
+            IRepository<Grade> gradeRepository,
+            IRepository<Absence> absenceRepository)
+        {
+            StudentViewModel viewModel = new StudentViewModel(loggedUser, messageBoxService, windowService, studentRepository,
+                subjectRepository, teachingMaterialRepository, gradeRepository, absenceRepository);
+
+            StudentView window = new StudentView(viewModel);
+
+            window.Show();
+        }
+
+        public void ShowSubjectDetailsView(Subject selectedSubject, Student loggedStudent, IRepository<Grade> gradeRepository, IRepository<Absence> absenceRepository, IMessageBoxService messageBoxService)
+        {
+            SubjectDetailsViewModel viewModel = new SubjectDetailsViewModel(selectedSubject, loggedStudent, gradeRepository, absenceRepository, messageBoxService);
+
+            SubjectDetailsView window = new SubjectDetailsView(viewModel);
 
             window.ShowDialog();
         }

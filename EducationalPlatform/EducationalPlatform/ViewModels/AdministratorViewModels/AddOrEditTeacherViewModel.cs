@@ -1,7 +1,6 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
-using EducationalPlatform.Events;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
 using System;
@@ -13,8 +12,6 @@ namespace EducationalPlatform.ViewModels.AdministratorViewModels
 {
     public class AddOrEditTeacherViewModel : ViewModelBase
     {
-        public delegate void NewTeacherEventHandler(object sender, NewTeacherEventArgs e);
-        public event NewTeacherEventHandler NewTeacherCreated;
 
 
         private readonly IRepository<Person> personRepository;
@@ -161,8 +158,7 @@ namespace EducationalPlatform.ViewModels.AdministratorViewModels
             personRepository.Add(personToAdd);
             teacherRepository.Add(teacherToAdd);
 
-            NewTeacherEventArgs eventArgs = new NewTeacherEventArgs(teacherToAdd);
-            NewTeacherCreated?.Invoke(this, eventArgs);
+            administratorViewModel.SelectedTeacher = teacherToAdd;
 
             administratorViewModel.Teachers.Clear();
             var list = teacherRepository.GetAll();

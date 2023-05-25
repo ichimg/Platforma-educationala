@@ -1,11 +1,10 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
-using EducationalPlatform.DataAccess.Repositories;
 using EducationalPlatform.Services;
-using Microsoft.EntityFrameworkCore;
+using EducationalPlatform.Domain.Models;
 using System;
 using System.Linq;
 using System.Windows.Input;
+using EducationalPlatform.DataAccess.Repositories;
 
 namespace EducationalPlatform.ViewModels
 {
@@ -101,6 +100,19 @@ namespace EducationalPlatform.ViewModels
                     teacherRepository,
                     classroomRepository,
                     specializationRepository,
+                    subjectRepository,
+                    teachingMaterialRepository,
+                    gradeRepository,
+                    absenceRepository);
+                RequestClose?.Invoke();
+                return;
+            }
+
+            if(loggedUser != null && loggedUser.Role == ERole.Student)
+            {
+                windowService.ShowStudentView(loggedUser, messageBoxService,
+                    studentRepository,
+                    windowService,
                     subjectRepository,
                     teachingMaterialRepository,
                     gradeRepository,

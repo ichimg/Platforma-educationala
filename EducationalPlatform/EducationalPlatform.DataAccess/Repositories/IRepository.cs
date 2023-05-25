@@ -1,4 +1,6 @@
-﻿namespace EducationalPlatform.DataAccess.Repositories
+﻿using System.Collections.Generic;
+
+namespace EducationalPlatform.DataAccess.Repositories
 {
     public interface IRepository<T>
     {

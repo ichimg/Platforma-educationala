@@ -1,13 +1,14 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
-using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using Microsoft.Win32;
 using System.Linq;
 using System.Windows.Input;
+using EducationalPlatform.DataAccess.Repositories;
 
 namespace EducationalPlatform.ViewModels.TeacherViewModels
 {
@@ -97,6 +98,32 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
                 }
 
                 return addCommand;
+            }
+        }
+
+        private ICommand uploadCommand;
+        public ICommand UploadCommand
+        {
+            get
+            {
+                if (uploadCommand is null)
+                {
+                    uploadCommand = new RelayCommand(UploadFile);
+                }
+
+                return uploadCommand;
+            }
+        }
+
+        private void UploadFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            bool? response = openFileDialog.ShowDialog();
+
+            if(response == true)
+            {
+                FilePath = openFileDialog.FileName;
             }
         }
 

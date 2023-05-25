@@ -1,4 +1,4 @@
-﻿namespace EducationalPlatform.DataAccess.Models
+﻿namespace EducationalPlatform.Domain.Models
 {
     public class Grade
     {

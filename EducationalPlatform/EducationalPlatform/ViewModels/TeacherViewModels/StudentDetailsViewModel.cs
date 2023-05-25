@@ -1,11 +1,9 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
-using EducationalPlatform.ViewModels.AdministratorViewModels;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,18 +17,21 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
         private readonly WindowService windowService;
         private readonly IRepository<Grade> gradeRepository;
         private readonly IRepository<Absence> absenceRepository;
+        private readonly IRepository<Classroom> classroomRepository;
         private readonly IMessageBoxService messageBoxService;
 
         public StudentDetailsViewModel(TeacherViewModel teacherViewModel,
             WindowService windowService,
             IMessageBoxService messageBoxService,
             IRepository<Grade> gradeRepository,
+            IRepository<Classroom> classroomRepository,
             IRepository<Absence> absenceRepository)
         {
             this.teacherViewModel = teacherViewModel ?? throw new ArgumentNullException(nameof(teacherViewModel));  
             this.windowService = windowService ?? throw new ArgumentNullException(nameof(windowService));
             this.gradeRepository = gradeRepository ?? throw new ArgumentNullException(nameof(gradeRepository));
             this.absenceRepository = absenceRepository ?? throw new ArgumentNullException(nameof(absenceRepository));
+            this.classroomRepository = classroomRepository ?? throw new ArgumentNullException(nameof(classroomRepository));
             this.messageBoxService = messageBoxService ?? throw new ArgumentNullException(nameof(messageBoxService));
 
             Grades = new ObservableCollection<Grade>(RefreshGradesList());
@@ -41,20 +42,53 @@ namespace EducationalPlatform.ViewModels.TeacherViewModels
 
         public IEnumerable<Grade> RefreshGradesList()
         {
-            return gradeRepository.GetAll()
-                .Where(g => g.StudentId == teacherViewModel.SelectedStudent.Id)
+            var masteredClassroom = classroomRepository.GetAll().Where(c => c.TeacherId == teacherViewModel.LoggedTeacher.Id).FirstOrDefault();
+
+            if (teacherViewModel.IsMasterMode && teacherViewModel.SelectedStudent.Classroom.TeacherId == teacherViewModel.LoggedTeacher.Id)
+            {
+                return gradeRepository.GetAll()
+                .Where(g => g.StudentId == teacherViewModel.SelectedStudent.Id
+                    && teacherViewModel.LoggedTeacher.Subjects.Any(s => g.SubjectId == s.Id)
+                    || g.StudentId == teacherViewModel.SelectedStudent.Id && teacherViewModel.SelectedStudent.ClassroomId == masteredClassroom.Id)
                 .OrderByDescending(g => g.Semester)
                 .ThenBy(g => g.Subject.Name)
                 .ThenByDescending(g => g.Value);
+            }
+
+            else
+            {
+                return gradeRepository.GetAll()
+               .Where(g => g.StudentId == teacherViewModel.SelectedStudent.Id 
+                    && teacherViewModel.LoggedTeacher.Subjects.Any(s => g.SubjectId == s.Id))
+               .OrderByDescending(g => g.Semester)
+               .ThenBy(g => g.Subject.Name)
+               .ThenByDescending(g => g.Value);
+            }
         }
 
         public IEnumerable<Absence> RefreshAbsencesList()
         {
-            return absenceRepository.GetAll()
-               .Where(a => a.StudentId == teacherViewModel.SelectedStudent.Id)
+            var masteredClassroom = classroomRepository.GetAll().Where(c => c.TeacherId == teacherViewModel.LoggedTeacher.Id).FirstOrDefault();
+
+            if (teacherViewModel.IsMasterMode && teacherViewModel.SelectedStudent.Classroom.TeacherId == teacherViewModel.LoggedTeacher.Id)
+            {
+                return absenceRepository.GetAll()
+               .Where(a => a.StudentId == teacherViewModel.SelectedStudent.Id 
+                    && teacherViewModel.LoggedTeacher.Subjects.Any(s => a.SubjectId == s.Id)
+                    || a.StudentId == teacherViewModel.SelectedStudent.Id && teacherViewModel.SelectedStudent.ClassroomId == masteredClassroom.Id)
                .OrderByDescending(a => a.Semester)
                .ThenBy(a => a.Subject.Name)
                .ThenByDescending(a => a.Date);
+            }
+            else
+            {
+                return absenceRepository.GetAll()
+               .Where(a => a.StudentId == teacherViewModel.SelectedStudent.Id 
+               && teacherViewModel.LoggedTeacher.Subjects.Any(s => a.SubjectId == s.Id))
+               .OrderByDescending(a => a.Semester)
+               .ThenBy(a => a.Subject.Name)
+               .ThenByDescending(a => a.Date);
+            }
         }
 
         private ObservableCollection<Grade> grades;

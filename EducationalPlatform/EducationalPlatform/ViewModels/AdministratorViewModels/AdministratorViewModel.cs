@@ -1,13 +1,10 @@
 ﻿using EducationalPlatform.Commands;
-using EducationalPlatform.DataAccess.Exceptions;
-using EducationalPlatform.DataAccess.Models;
 using EducationalPlatform.DataAccess.Repositories;
-using EducationalPlatform.Events;
+using EducationalPlatform.Domain.Models;
 using EducationalPlatform.Extensions;
 using EducationalPlatform.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace EducationalPlatform.ViewModels.AdministratorViewModels
@@ -320,6 +317,7 @@ namespace EducationalPlatform.ViewModels.AdministratorViewModels
             if (DisplayedList == EDisplayedList.Teachers)
             {
                 windowService.ShowAddOrEditTeacherView(this, windowService, personRepository, teacherRepository, classroomRepository, true);
+
             }
 
             if (DisplayedList == EDisplayedList.Specializations)
@@ -364,16 +362,6 @@ namespace EducationalPlatform.ViewModels.AdministratorViewModels
                 Specializations.Clear();
                 Specializations.AddRange(specializationRepository.GetAll());
             }
-        }
-
-        public void ListenAddOrEditTeacherViewModel(AddOrEditTeacherViewModel viewModel)
-        {
-            viewModel.NewTeacherCreated += Handle_NewTeacherCreated;
-        }
-
-        private void Handle_NewTeacherCreated(object sender, NewTeacherEventArgs e)
-        {
-            SelectedTeacher = e.Data;
         }
     }
 }

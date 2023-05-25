@@ -1,4 +1,4 @@
-﻿using EducationalPlatform.DataAccess.Models;
+﻿using EducationalPlatform.Domain.Models;
 using System;
 using EducationalPlatform.DataAccess.Repositories;
 using EducationalPlatform.Commands;
