@@ -1,7 +1,8 @@
 # Platforma educationala
 
 ## About 
-A management system for an educational platform, using WPF and C# along with EF Core, MVVM.
+A management system for an educational platform, using WPF and C# along with EF Core.
+Architecture: MVVM.
 
 ## Overview
 
